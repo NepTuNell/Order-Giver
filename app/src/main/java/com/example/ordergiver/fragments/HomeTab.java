@@ -29,6 +29,7 @@ public class HomeTab extends Fragment
     private SpeechRecognizer speechRecognizer;
     private Intent speechRecognizerIntent;
     private TextView voiceText;
+    private boolean isSpeaking;
 
     public HomeTab()
     {
@@ -65,8 +66,13 @@ public class HomeTab extends Fragment
         this.getSpeechRecognizerButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                enableRecognizerButton();
-                getSpeechRecognizer().startListening(getSpeechRecognizerIntent());
+                if (false == getIsSpeaking()) {
+                    enableRecognizerButton();
+                    getSpeechRecognizer().startListening(getSpeechRecognizerIntent());
+                } else {
+                    disableRecognizerButton();
+                    getSpeechRecognizer().stopListening();
+                }
             }
         });
 
@@ -103,8 +109,8 @@ public class HomeTab extends Fragment
 
             @Override
             public void onResults(Bundle bundle) {
-                ArrayList<String> textVoice = bundle.getStringArrayList (SpeechRecognizer. RESULTS_RECOGNITION);
-                getVoiceText().setText(textVoice.get(0));
+                ArrayList<String> textVoice = bundle.getStringArrayList (SpeechRecognizer.RESULTS_RECOGNITION);
+                setTextVoice(textVoice.get(0));
             }
 
             @Override
@@ -121,14 +127,21 @@ public class HomeTab extends Fragment
 
     public void enableRecognizerButton()
     {
+        this.isSpeaking = true;
         getSpeechRecognizerButton().setBackground(this.getResources().getDrawable(R.drawable.ic_mic_on));
         getSpeechRecognizerText().setText("Écoute ...");
     }
 
     public void disableRecognizerButton()
     {
+        this.isSpeaking = false;
         getSpeechRecognizerButton().setBackground(this.getResources().getDrawable(R.drawable.ic_mic_off));
         getSpeechRecognizerText().setText("Touchez pour donner un ordre");
+    }
+
+    public boolean getIsSpeaking()
+    {
+        return this.isSpeaking;
     }
 
     public void setTextVoice(String textVoice)

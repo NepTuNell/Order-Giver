@@ -20,9 +20,14 @@ import java.util.Locale;
 
 public class HomeTab extends Fragment
 {
+    // Button off
+    private Button speechRecognizerOffButton;
+    private TextView speechRecognizerOffText;
 
-    private Button speechRecognizerButton;
-    private TextView speechRecognizerText;
+    // Button on
+    private Button speechRecognizerOnButton;
+    private TextView speechRecognizerOnText;
+
     private SpeechRecognizer speechRecognizer;
     private Intent speechRecognizerIntent;
 
@@ -42,8 +47,15 @@ public class HomeTab extends Fragment
 
     public void setters(ViewGroup rotationView)
     {
-        this.speechRecognizerButton = rotationView.findViewById(R.id.btn_mic);
-        this.speechRecognizerText = rotationView.findViewById(R.id.txt_state);
+        // button off
+        this.speechRecognizerOffButton = rotationView.findViewById(R.id.btn_mic_off);
+        this.speechRecognizerOffText = rotationView.findViewById(R.id.txt_state_off);
+
+        // button on
+        this.speechRecognizerOnButton = rotationView.findViewById(R.id.btn_mic_on);
+        this.speechRecognizerOnText = rotationView.findViewById(R.id.txt_state_on);
+
+        // Create speechRecognizer
         this.speechRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext());
         this.speechRecognizerIntent = new Intent(RecognizerIntent. ACTION_RECOGNIZE_SPEECH );
         this.speechRecognizerIntent.putExtra(RecognizerIntent. EXTRA_LANGUAGE_MODEL , RecognizerIntent. LANGUAGE_MODEL_FREE_FORM );
@@ -52,7 +64,7 @@ public class HomeTab extends Fragment
 
     public void addListeners()
     {
-        this.getSpeechRecognizerButton().setOnClickListener(new View.OnClickListener() {
+        this.getSpeechRecognizerOffButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getSpeechRecognizer().startListening(getSpeechRecognizerIntent());
@@ -67,7 +79,7 @@ public class HomeTab extends Fragment
 
             @Override
             public void onBeginningOfSpeech() {
-                setSpeechRecognizerText("Écoute ...");
+                enableRecognizerButton();
             }
 
             @Override
@@ -82,7 +94,7 @@ public class HomeTab extends Fragment
 
             @Override
             public void onEndOfSpeech() {
-                setSpeechRecognizerText("Touchez pour donner un ordre");
+                disableRecognizerButton();
             }
 
             @Override
@@ -107,20 +119,52 @@ public class HomeTab extends Fragment
         });
     }
 
-    public void setSpeechRecognizerButton(Button speechRecognizerButton) {
-        this.speechRecognizerButton = speechRecognizerButton;
+    public void enableRecognizerButton()
+    {
+        getSpeechRecognizerOffButton().setVisibility(View.INVISIBLE);
+        getSpeechRecognizerOffText().setVisibility(View.INVISIBLE);
+        getSpeechRecognizerOnButton().setVisibility(View.VISIBLE);
+        getSpeechRecognizerOnText().setVisibility(View.VISIBLE);
     }
 
-    public Button getSpeechRecognizerButton() {
-        return this.speechRecognizerButton;
+    public void disableRecognizerButton()
+    {
+        getSpeechRecognizerOffButton().setVisibility(View.VISIBLE);
+        getSpeechRecognizerOffText().setVisibility(View.VISIBLE);
+        getSpeechRecognizerOnButton().setVisibility(View.INVISIBLE);
+        getSpeechRecognizerOnText().setVisibility(View.INVISIBLE);
     }
 
-    public void setSpeechRecognizerText(String speechRecognizerText) {
-        this.speechRecognizerText.setText(speechRecognizerText);
+    public void setSpeechRecognizerOnButton(Button speechRecognizerOnButton) {
+        this.speechRecognizerOnButton = speechRecognizerOnButton;
     }
 
-    public TextView getSpeechRecognizerText() {
-        return this.speechRecognizerText;
+    public Button getSpeechRecognizerOnButton() {
+        return this.speechRecognizerOnButton;
+    }
+
+    public void setSpeechRecognizerOffButton(Button speechRecognizerOffButton) {
+        this.speechRecognizerOffButton = speechRecognizerOffButton;
+    }
+
+    public Button getSpeechRecognizerOffButton() {
+        return this.speechRecognizerOffButton;
+    }
+
+    public void setSpeechRecognizerOffText(String speechRecognizerText) {
+        this.speechRecognizerOffText.setText(speechRecognizerText);
+    }
+
+    public TextView getSpeechRecognizerOffText() {
+        return this.speechRecognizerOffText;
+    }
+
+    public void setSpeechRecognizerOnText(String speechRecognizerOnText) {
+        this.speechRecognizerOnText.setText(speechRecognizerOnText);
+    }
+
+    public TextView getSpeechRecognizerOnText() {
+        return this.speechRecognizerOnText;
     }
 
     public SpeechRecognizer getSpeechRecognizer() {

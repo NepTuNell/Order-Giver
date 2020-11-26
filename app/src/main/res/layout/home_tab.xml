@@ -21,8 +21,8 @@
         android:layout_marginTop="20dp" />
 
     <TextView
-        android:id="@+id/txt_state"
-        android:layout_above="@id/btn_mic"
+        android:id="@+id/txt_state_off"
+        android:layout_above="@id/btn_mic_off"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -33,11 +33,33 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/btn_mic"
+        android:id="@+id/btn_mic_off"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/ic_mic_off"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/txt_state_on"
+        android:layout_above="@id/btn_mic_on"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Écoute ..."
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/btn_mic_on"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_mic_on"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
 
 </RelativeLayout>

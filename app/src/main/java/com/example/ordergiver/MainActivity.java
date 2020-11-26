@@ -1,6 +1,9 @@
 package com.example.ordergiver;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,15 +11,23 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Composants --------------
+
+    // View
+    private ViewPager viewVisible;
+    private PagerAdapter pageAdapter;
     private Button speechRecognizerButton;
     private Button settingsButton;
     private TextView speechRecognizerText;
@@ -40,6 +51,20 @@ public class MainActivity extends AppCompatActivity {
         this.speechRecognizerIntent = new Intent(RecognizerIntent. ACTION_RECOGNIZE_SPEECH );
         this.speechRecognizerIntent.putExtra(RecognizerIntent. EXTRA_LANGUAGE_MODEL , RecognizerIntent. LANGUAGE_MODEL_FREE_FORM );
         this.speechRecognizerIntent.putExtra(RecognizerIntent. EXTRA_LANGUAGE , Locale.getDefault ());
+    }
+
+    // View configuration ----------------------
+    private void initView()
+    {
+        // Add Tabs
+        List<Fragment> fragmentList = new ArrayList<>();
+        fragmentList.add(new HomeTab());
+        fragmentList.add(new OrderTab());
+
+        // Config
+        this.viewVisible = findViewById(R.id.view_visible);
+        this.pageAdapter = new Adapter(getSupportFragmentManager(), fragmentList);
+        this.viewVisible.setAdapter(this.pageAdapter);
     }
 
     public void addListeners()

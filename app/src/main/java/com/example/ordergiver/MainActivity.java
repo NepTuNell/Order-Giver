@@ -11,9 +11,13 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.view.View;
-import android.widget.Adapter;
+
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.ordergiver.fragments.HomeTab;
+import com.example.ordergiver.fragments.OrderTab;
+import com.example.ordergiver.java.Adapter;
 
 import org.w3c.dom.Text;
 
@@ -23,13 +27,9 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Composants --------------
-
-    // View
     private ViewPager viewVisible;
     private PagerAdapter pageAdapter;
     private Button speechRecognizerButton;
-    private Button settingsButton;
     private TextView speechRecognizerText;
     private SpeechRecognizer speechRecognizer;
     private Intent speechRecognizerIntent;
@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
     {
         this.speechRecognizerButton = findViewById(R.id.btn_mic);
         this.speechRecognizerText = findViewById(R.id.txt_state);
-        this.settingsButton = findViewById(R.id.btn_settings);
         this.speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         this.speechRecognizerIntent = new Intent(RecognizerIntent. ACTION_RECOGNIZE_SPEECH );
         this.speechRecognizerIntent.putExtra(RecognizerIntent. EXTRA_LANGUAGE_MODEL , RecognizerIntent. LANGUAGE_MODEL_FREE_FORM );
@@ -119,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         this.getSpeechRecognizerButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                speechRecognizer.startListening(getSpeechRecognizerIntent());
+                getSpeechRecognizer().startListening(getSpeechRecognizerIntent());
             }
         });
     }
@@ -130,16 +129,6 @@ public class MainActivity extends AppCompatActivity {
 
     public Button getSpeechRecognizerButton() {
         return this.speechRecognizerButton;
-    }
-
-    public void setSettingsButton(Button settingsButton)
-    {
-        this.settingsButton = settingsButton;
-    }
-
-    public Button getSettingsButton()
-    {
-        return this.settingsButton;
     }
 
     public void setSpeechRecognizerText(String speechRecognizerText) {

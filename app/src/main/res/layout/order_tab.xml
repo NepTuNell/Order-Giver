@@ -7,6 +7,4 @@
     android:background="@drawable/app_background"
     tools:context=".fragments.HomeTab">
 
-
-
 </RelativeLayout>

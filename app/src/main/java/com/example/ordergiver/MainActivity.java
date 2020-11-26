@@ -11,6 +11,7 @@ import org.w3c.dom.Text;
 public class MainActivity extends AppCompatActivity {
 
     private Button speechRecognizerButton;
+    private Button seetingsButton;
     private TextView speechRecognizerText;
 
     @Override

@@ -7,9 +7,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 
-import com.example.ordergiver.fragments.HomeTab;
-import com.example.ordergiver.fragments.OrderTab;
-import com.example.ordergiver.java.Adapter;
+import com.example.ordergiver.fragments.*;
+import com.example.ordergiver.java.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     {
         // Add Tabs
         List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(new HomeTab());
+        fragmentList.add(new HomeTab(this));
         fragmentList.add(new OrderTab());
 
         // Config

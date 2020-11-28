@@ -1,9 +1,13 @@
 package com.example.ordergiver.fragments;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.speech.RecognitionListener;
@@ -17,23 +21,24 @@ import android.widget.TextView;
 
 import com.example.ordergiver.R;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Locale;
 
 public class HomeTab extends Fragment
 {
-    // Button
+    // Permissions
+    private int PERMISSION_RECORD_AUDIO = 1;
+
+    // Composants
     private Button speechRecognizerButton;
-    private TextView speechRecognizerText;
+    private TextView speechRecognizerText, voiceText;
     private SpeechRecognizer speechRecognizer;
     private Intent speechRecognizerIntent;
-    private TextView voiceText;
-    private boolean isSpeaking;
+    private Activity mainActivity;
 
-    public HomeTab()
+    public HomeTab(Activity mainActivity)
     {
-        // Required empty public constructor
+        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -49,11 +54,9 @@ public class HomeTab extends Fragment
     {
         // text voice
         this.voiceText = rotationView.findViewById(R.id.txt_voice);
-
         // button
         this.speechRecognizerButton = rotationView.findViewById(R.id.btn_mic);
         this.speechRecognizerText = rotationView.findViewById(R.id.txt_state);
-
         // Create speechRecognizer
         this.speechRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext());
         this.speechRecognizerIntent = new Intent(RecognizerIntent. ACTION_RECOGNIZE_SPEECH );
@@ -61,17 +64,24 @@ public class HomeTab extends Fragment
         this.speechRecognizerIntent.putExtra(RecognizerIntent. EXTRA_LANGUAGE , Locale.getDefault ());
     }
 
+    // - Fonctions - - - - -
     public void addListeners()
     {
-        this.getSpeechRecognizerButton().setOnClickListener(new View.OnClickListener() {
+        this.getSpeechRecognizerButton().setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-                if (false == getIsSpeaking()) {
+            public void onClick(View view)
+            {
+                // Détection permissions
+                if (!(ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.RECORD_AUDIO) ==
+                        PackageManager.PERMISSION_GRANTED))
+                {
+                    requestRecordAudio();
+                }
+                else
+                {
                     enableRecognizerButton();
                     getSpeechRecognizer().startListening(getSpeechRecognizerIntent());
-                } else {
-                    disableRecognizerButton();
-                    getSpeechRecognizer().stopListening();
                 }
             }
         });
@@ -109,8 +119,8 @@ public class HomeTab extends Fragment
 
             @Override
             public void onResults(Bundle bundle) {
-                ArrayList<String> textVoice = bundle.getStringArrayList (SpeechRecognizer.RESULTS_RECOGNITION);
-                setTextVoice(textVoice.get(0));
+                ArrayList<String> textVoice = bundle.getStringArrayList (SpeechRecognizer. RESULTS_RECOGNITION);
+                getVoiceText().setText(textVoice.get(0));
             }
 
             @Override
@@ -127,57 +137,64 @@ public class HomeTab extends Fragment
 
     public void enableRecognizerButton()
     {
-        this.isSpeaking = true;
         getSpeechRecognizerButton().setBackground(this.getResources().getDrawable(R.drawable.ic_mic_on));
         getSpeechRecognizerText().setText("Écoute ...");
     }
 
     public void disableRecognizerButton()
     {
-        this.isSpeaking = false;
         getSpeechRecognizerButton().setBackground(this.getResources().getDrawable(R.drawable.ic_mic_off));
         getSpeechRecognizerText().setText("Touchez pour donner un ordre");
     }
 
-    public boolean getIsSpeaking()
+    // - Permissions - - - - -
+    private void requestRecordAudio()
     {
-        return this.isSpeaking;
+        ActivityCompat.requestPermissions(mainActivity,
+                new String[] {Manifest.permission.RECORD_AUDIO}, PERMISSION_RECORD_AUDIO);
     }
 
-    public void setTextVoice(String textVoice)
-    {
-        this.voiceText.setText(textVoice);
-    }
+    // - Getters - - - - -
 
     public TextView getVoiceText()
     {
         return this.voiceText;
     }
 
-    public void setSpeechRecognizerButton(Button speechRecognizerOnButton) {
-        this.speechRecognizerButton = speechRecognizerOnButton;
-    }
-
-    public Button getSpeechRecognizerButton() {
+    public Button getSpeechRecognizerButton()
+    {
         return this.speechRecognizerButton;
     }
 
-    public void setSpeechRecognizerText(String speechRecognizerText) {
-        this.speechRecognizerText.setText(speechRecognizerText);
-    }
-
-    public TextView getSpeechRecognizerText() {
+    public TextView getSpeechRecognizerText()
+    {
         return this.speechRecognizerText;
     }
 
-
-    public SpeechRecognizer getSpeechRecognizer() {
+    public SpeechRecognizer getSpeechRecognizer()
+    {
         return speechRecognizer;
     }
 
     public Intent getSpeechRecognizerIntent()
     {
         return this.speechRecognizerIntent;
+    }
+
+    // - Setters - - - - -
+    public void setSpeechRecognizerButton(Button speechRecognizerOnButton)
+    {
+        this.speechRecognizerButton = speechRecognizerOnButton;
+    }
+
+    public void setSpeechRecognizerText(String speechRecognizerText)
+    {
+        this.speechRecognizerText.setText(speechRecognizerText);
+    }
+
+    public void setTextVoice(String textVoice)
+    {
+        this.voiceText.setText(textVoice);
     }
 
 }

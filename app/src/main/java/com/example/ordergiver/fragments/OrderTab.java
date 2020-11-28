@@ -9,12 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.ordergiver.R;
+import com.example.ordergiver.entity.Order;
+import com.example.ordergiver.manager.OrderManager;
 
 public class OrderTab extends Fragment
 {
+    private OrderManager orderManager;
+
     public OrderTab()
     {
-        // Required empty public constructor
+        this.orderManager = new OrderManager(getContext());
     }
 
     @Override

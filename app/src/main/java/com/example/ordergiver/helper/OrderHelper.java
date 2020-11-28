@@ -10,7 +10,7 @@ public class OrderHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     private static OrderHelper sInstance;
     public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "order.db";
+    public static final String DATABASE_NAME = "order-giver.db";
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE "+ OrderManager.FeedOrder.TABLE_NAME+" ("+
                     OrderManager.FeedOrder.KEY_ID_ORDER+" INTEGER PRIMARY KEY, "+

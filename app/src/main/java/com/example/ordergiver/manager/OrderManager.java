@@ -7,12 +7,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
 import com.example.ordergiver.entity.Order;
-import com.example.ordergiver.helper.OrderHelper;
+import com.example.ordergiver.database.DatabaseSQLLite;
+
+import java.util.ArrayList;
 
 public class OrderManager {
 
-    private OrderHelper db;
+    private DatabaseSQLLite db;
     private SQLiteDatabase manager;
+
+    /*****************************************
+     *         Création de l'instance
+     *****************************************/
 
     /* Inner class that defines the table contents */
     public static class FeedOrder implements BaseColumns {
@@ -23,7 +29,16 @@ public class OrderManager {
 
     // Constructeur
     public OrderManager(Context context) {
-        this.db = OrderHelper.getInstance(context);
+        this.db = DatabaseSQLLite.getInstance(context);
+    }
+
+    /*****************************************
+     *     Gestion de la base de données
+     *****************************************/
+
+    public SQLiteDatabase getManager()
+    {
+        return this.manager;
     }
 
     public void openWriteMod()
@@ -41,43 +56,73 @@ public class OrderManager {
         this.manager.close();
     }
 
-    public long create(Order order) {
+    /*****************************************
+     *           Méthodes du CRUD
+     *****************************************/
+
+    public void create(Order order) {
+        openWriteMod();
+
         ContentValues values = new ContentValues();
         values.put(FeedOrder.KEY_NOM_ORDER, order.getOrderMessage());
+        getManager().insert(FeedOrder.TABLE_NAME,null,values);
 
-        return manager.insert(FeedOrder.TABLE_NAME,null,values);
+        close();
     }
 
-    public int update(Order order) {
+    public void update(Order order) {
+        openWriteMod();
+
         ContentValues values = new ContentValues();
         values.put(FeedOrder.KEY_NOM_ORDER, order.getOrderMessage());
         String where = FeedOrder.KEY_ID_ORDER+" = ?";
         String[] whereArgs = {""+order.getOrderId()};
+        getManager().update(FeedOrder.TABLE_NAME, values, where, whereArgs);
 
-        return manager.update(FeedOrder.TABLE_NAME, values, where, whereArgs);
+        close();
     }
 
-    public int delete(Order order) {
+    public void delete(Order order) {
+        openWriteMod();
+
         String where = FeedOrder.KEY_ID_ORDER+" = ?";
         String[] whereArgs = {""+order.getOrderId()};
+        getManager().delete(FeedOrder.TABLE_NAME, where, whereArgs);
 
-        return manager.delete(FeedOrder.TABLE_NAME, where, whereArgs);
+        close();
     }
 
     public Order getOrder(int id) {
+        openReadMod();
         Order order=new Order(0,"");
 
         Cursor c = manager.rawQuery("SELECT * FROM "+FeedOrder.TABLE_NAME+" WHERE "+FeedOrder.KEY_ID_ORDER+"="+id, null);
         if (c.moveToFirst()) {
             order.setOrderId(c.getInt(c.getColumnIndex(FeedOrder.KEY_ID_ORDER)));
             order.setOrderMessage(c.getString(c.getColumnIndex(FeedOrder.KEY_NOM_ORDER)));
-            c.close();
         }
+
+        c.close();
+        close();
 
         return order;
     }
 
-    public Cursor getOrders() {
-        return manager.rawQuery("SELECT * FROM "+FeedOrder.TABLE_NAME,null);
+    public ArrayList<Order> getOrders() {
+        openReadMod();
+        ArrayList<Order> ordersItems = new ArrayList<Order>();
+        Cursor cursor = manager.rawQuery("SELECT * FROM " + FeedOrder.TABLE_NAME, null);
+
+        while (cursor.moveToNext()) {
+            Order order = new Order();
+            order.setOrderId(cursor.getInt(cursor.getColumnIndex(FeedOrder.KEY_ID_ORDER)));
+            order.setOrderMessage(cursor.getString(cursor.getColumnIndex(FeedOrder.KEY_NOM_ORDER)));
+            ordersItems.add(order);
+        }
+
+        cursor.close();
+        close();
+
+        return ordersItems;
     }
 }

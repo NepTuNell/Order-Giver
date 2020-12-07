@@ -1,4 +1,4 @@
-package com.example.ordergiver.helper;
+package com.example.ordergiver.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -6,9 +6,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.ordergiver.manager.OrderManager;
 
-public class OrderHelper extends SQLiteOpenHelper {
+public class DatabaseSQLLite extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    private static OrderHelper sInstance;
+    private static DatabaseSQLLite sInstance;
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "order-giver.db";
     private static final String SQL_CREATE_ENTRIES =
@@ -18,15 +18,15 @@ public class OrderHelper extends SQLiteOpenHelper {
 
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + OrderManager.FeedOrder.TABLE_NAME;
 
-    public static synchronized OrderHelper getInstance(Context context) {
+    public static synchronized DatabaseSQLLite getInstance(Context context) {
         if (sInstance == null) {
-            sInstance = new OrderHelper(context);
+            sInstance = new DatabaseSQLLite(context);
         }
 
         return sInstance;
     }
 
-    public OrderHelper(Context context) {
+    public DatabaseSQLLite(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

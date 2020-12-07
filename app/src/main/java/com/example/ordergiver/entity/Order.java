@@ -10,6 +10,10 @@ public class Order {
         this.orderMessage = orderMessage;
     }
 
+    public Order() {
+
+    }
+
     public int getOrderId() {
         return this.orderId;
     }

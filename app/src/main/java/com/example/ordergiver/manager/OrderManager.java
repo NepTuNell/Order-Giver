@@ -125,4 +125,26 @@ public class OrderManager {
 
         return ordersItems;
     }
+
+    public boolean checkOrderExist(String orderName, int orderId) {
+        openReadMod();
+
+        boolean exist = false;
+        String query = "SELECT * FROM "+FeedOrder.TABLE_NAME+" WHERE "+FeedOrder.KEY_NOM_ORDER+" = '"+orderName+"'";
+
+        if (-1 != orderId) {
+            query += " AND "+FeedOrder.KEY_ID_ORDER+" <> "+orderId;
+        }
+
+        Cursor cursor = manager.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            exist = true;
+        }
+
+        cursor.close();
+        close();
+
+        return exist;
+    }
 }

@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ordergiver.R;
@@ -21,6 +20,7 @@ import com.example.ordergiver.entity.Order;
 import com.example.ordergiver.java.OrderAdapter;
 import com.example.ordergiver.manager.OrderManager;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 
 public class OrderTab extends Fragment
@@ -125,20 +125,22 @@ public class OrderTab extends Fragment
         Button btnClose, btnAccept;
         final EditText txtOrder;
         final Order order;
+        final int orderId;
 
         dialog.setContentView(R.layout.add_order_popup);
         btnClose = dialog.findViewById(R.id.btn_close);
         btnAccept = dialog.findViewById(R.id.btn_valider);
-
-        // Input popup saisie ordre
         txtOrder = dialog.findViewById(R.id.txt_order);
+
         // Récupération text item cliqué
         if (-1 != position) {
             order = this.orderManager.getOrder(this.orderAdapter.getElemByPosition(position));
             txtOrder.setText(order.getOrderMessage());
+            orderId = order.getOrderId();
         } else {
             // Instanciation d'un nouvel ordre
             order = new Order();
+            orderId = -1;
         }
 
         btnClose.setOnClickListener(new View.OnClickListener()
@@ -155,22 +157,39 @@ public class OrderTab extends Fragment
             @Override
             public void onClick(View view)
             {
-                orderName = txtOrder.getText().toString();
-                order.setOrderMessage(orderName);
-
-                if (-1 == position) {
-                    // Création d'un nouvel ordre
-                    getOrderManager().create(order);
-                } else {
-                    // Edition d'un ordre
-                    getOrderManager().update(order);
-                }
-
+                editOrder(order, txtOrder, orderId, position);
                 initRecyclerView(rotationView);
                 dialog.dismiss();
             }
         });
 
         dialog.show();
+    }
+
+    public void editOrder(Order order, EditText txtOrder, int orderId, int position)
+    {
+        orderName = txtOrder.getText().toString();
+        orderName = normalize(orderName);
+        order.setOrderMessage(orderName);
+
+        if (getOrderManager().checkOrderExist(orderName, orderId)) {
+            Toast.makeText(getContext(), "Cet ordre existe déjà .", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (-1 == position) {
+            // Création d'un nouvel ordre
+            getOrderManager().create(order);
+        } else {
+            // Edition d'un ordre
+            getOrderManager().update(order);
+        }
+    }
+
+    public String normalize(String str)
+    {
+        str = Normalizer.normalize(str, Normalizer.Form.NFD);
+        str = str.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return str.trim().toLowerCase();
     }
 }

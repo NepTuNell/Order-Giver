@@ -18,9 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ordergiver.R;
+import com.example.ordergiver.manager.OrderManager;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -36,9 +39,13 @@ public class HomeTab extends Fragment
     private Intent speechRecognizerIntent;
     private Activity mainActivity;
 
+    // manager base de données table ordre
+    private OrderManager orderManager;
+
     public HomeTab(Activity mainActivity)
     {
         this.mainActivity = mainActivity;
+        this.orderManager = new OrderManager(mainActivity);
     }
 
     @Override
@@ -119,8 +126,12 @@ public class HomeTab extends Fragment
 
             @Override
             public void onResults(Bundle bundle) {
-                ArrayList<String> textVoice = bundle.getStringArrayList (SpeechRecognizer. RESULTS_RECOGNITION);
+                ArrayList<String> textVoice = bundle.getStringArrayList(SpeechRecognizer. RESULTS_RECOGNITION);
                 getVoiceText().setText(textVoice.get(0));
+
+                if (orderExist(textVoice.get(0).trim())) {
+                    // TO DO : BASTIAN A TOI DE JOUER ICI POUR AFFICHER L'ENVOIE DU SMS (ON OPTIMISERA PLUS TARD)
+                }
             }
 
             @Override
@@ -133,6 +144,37 @@ public class HomeTab extends Fragment
 
             }
         });
+    }
+
+    public boolean orderExist(String sentence)
+    {
+        if (sentence.equals("")) {
+            return false;
+        }
+
+        String orderName = "";
+        int length = sentence.length();
+
+        if (sentence.contains(" ")) {
+            length = sentence.indexOf(" ");
+        }
+
+        orderName = sentence.substring(0, length);
+        orderName = normalize(orderName);
+
+        if (getOrderManager().checkOrderExist(orderName, -1)) {
+            Toast.makeText(getContext(), orderName, Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        return false;
+    }
+
+    public static String normalize(String str)
+    {
+        str = Normalizer.normalize(str, Normalizer.Form.NFD);
+        str = str.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return str.toLowerCase();
     }
 
     public void enableRecognizerButton()
@@ -155,6 +197,11 @@ public class HomeTab extends Fragment
     }
 
     // - Getters - - - - -
+
+    public OrderManager getOrderManager()
+    {
+        return this.orderManager;
+    }
 
     public TextView getVoiceText()
     {

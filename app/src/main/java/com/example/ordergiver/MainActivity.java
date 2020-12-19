@@ -30,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
     {
         // Add Tabs
         List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(new HomeTab(this));
-        fragmentList.add(new OrderTab(this));
+        fragmentList.add(new HomeTab());
+        fragmentList.add(new OrderTab());
 
         // Config
         this.viewVisible = findViewById(R.id.view_visible);

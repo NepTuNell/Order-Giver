@@ -1,6 +1,6 @@
 package com.example.ordergiver.fragments;
 
-import android.app.Activity;
+
 import android.app.Dialog;
 import android.os.Bundle;
 
@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,8 @@ import com.example.ordergiver.manager.OrderManager;
 import java.text.Normalizer;
 import java.util.ArrayList;
 
+import static java.lang.Thread.sleep;
+
 public class OrderTab extends Fragment
 {
     // Recycler View
@@ -33,71 +37,71 @@ public class OrderTab extends Fragment
 
     private OrderManager orderManager;
     private Dialog dialog;
-    private Activity activity;
     private Button addOrder;
     private String orderName;
-
     private ViewGroup rotationView;
 
+    // control
+    boolean isTouchingButton;
 
-    /*****************************************
-     *         Création de l'instance
-     *****************************************/
-
-    /**
-     * Constructor
-     */
-    public OrderTab(Activity activity)
-    {
-        this.orderManager = new OrderManager(activity);
-        this.activity = activity;
-        dialog = new Dialog(this.activity);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        this.rotationView = (ViewGroup) inflater.inflate(R.layout.order_tab, container, false);
-        addOrder = this.rotationView.findViewById(R.id.btn_add);
-        addOrder.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                showPopup(-1);
-            }
-        });
-        initRecyclerView(this.rotationView);
+        initAllAttributes(inflater, container);
+        initRecyclerView();
         return rotationView;
     }
 
-    /*****************************************
-     *           Accesseurs
-     *****************************************/
+    /* Getters */
+    public OrderManager getOrderManager() { return orderManager; }
+    public Button getAddOrder() { return addOrder; }
+    public OrderAdapter getOrderAdapter() { return orderAdapter; }
+    public ArrayList<Order> getOrdersList() { return ordersList; }
+    public Dialog getDialog() { return dialog; }
+    public String getOrderName() { return orderName; }
+    public ViewGroup getRotationView() { return rotationView; }
+    public boolean getIsTouchingButton() { return  isTouchingButton; }
 
-    public OrderManager getOrderManager()
+    /* Setters */
+    private void initAllAttributes(LayoutInflater inflater, ViewGroup container)
     {
-        return this.orderManager;
+        dialog = new Dialog(getActivity());
+        rotationView = (ViewGroup) inflater.inflate(R.layout.order_tab, container, false);
+        orderManager = new OrderManager(getActivity());
+        addOrder = rotationView.findViewById(R.id.btn_add);
+        // Recycler view
+        mLayoutManager = new LinearLayoutManager(getContext());
+        orderRecyclerView = getRotationView().findViewById(R.id.recyclerView);
+        orderRecyclerView.setLayoutManager(mLayoutManager);
+        orderRecyclerView.setHasFixedSize(true);
+        isTouchingButton = false;
     }
 
-    /*****************************************
-     *    Méthodes de la liste des ordres
-     *****************************************/
+    private void initRecyclerView()
+    {
+        ordersList = getOrderManager().getOrders();
+        orderAdapter = new OrderAdapter(ordersList);
+        orderRecyclerView.setAdapter(orderAdapter);
 
-    private void initRecyclerView (View view) {
-        // Initialisation de la liste des ordres
-        this.ordersList = getOrderManager().getOrders();
-        // Création du recyclerView
-        this.orderRecyclerView = view.findViewById(R.id.recyclerView);
-        this.orderRecyclerView.setHasFixedSize(true);
-        // Adaptation de la liste des ordres pour le recycler
-        this.mLayoutManager = new LinearLayoutManager(activity.getBaseContext());
-        this.orderAdapter = new OrderAdapter(ordersList);
-        this.orderRecyclerView.setLayoutManager(mLayoutManager);
-        this.orderRecyclerView.setAdapter(this.orderAdapter);
+        addEventListeners();
+    }
 
-        // Ajout d'un listener
-        this.orderAdapter.setOnItemClickListener(new OrderAdapter.OnItemClickListener() {
+    private void setOrderName(String order) { orderName = order; }
+    private void setIsTouchingButton(boolean touching) { isTouchingButton = touching; }
+
+    /* Listeners */
+
+    private void addEventListeners()
+    {
+        getAddOrder().setOnClickListener(new View.OnClickListener()  {
+            @Override
+            public void onClick(View view) {
+                showPopup(-1);
+            }
+        });
+
+        getOrderAdapter().setOnItemClickListener(new OrderAdapter.OnItemClickListener() {
             @Override
             public void onEditClick(int position) {
                 showPopup(position);
@@ -109,16 +113,15 @@ public class OrderTab extends Fragment
         });
     }
 
-    public void removeItem (int position) {
-        Order order = this.orderManager.getOrder(this.orderAdapter.getElemByPosition(position));
-        this.orderManager.delete(order);
-        this.ordersList.remove(position);
-        this.orderAdapter.notifyItemRemoved(position);
-    }
+    /* Methods */
 
-    /*****************************************
-     *    Méthodes de la popup new/edit
-     *****************************************/
+    public void removeItem (int position)
+    {
+        Order order = getOrderManager().getOrder(getOrderAdapter().getElemByPosition(position));
+        getOrderManager().delete(order);
+        getOrdersList().remove(position);
+        getOrderAdapter().notifyItemRemoved(position);
+    }
 
     private void showPopup(final int position)
     {
@@ -127,14 +130,14 @@ public class OrderTab extends Fragment
         final Order order;
         final int orderId;
 
-        dialog.setContentView(R.layout.add_order_popup);
-        btnClose = dialog.findViewById(R.id.btn_close);
-        btnAccept = dialog.findViewById(R.id.btn_valider);
-        txtOrder = dialog.findViewById(R.id.txt_order);
+        getDialog().setContentView(R.layout.add_order_popup);
+        btnClose = getDialog().findViewById(R.id.btn_close);
+        btnAccept = getDialog().findViewById(R.id.btn_valider);
+        txtOrder = getDialog().findViewById(R.id.txt_order);
 
         // Récupération text item cliqué
         if (-1 != position) {
-            order = this.orderManager.getOrder(this.orderAdapter.getElemByPosition(position));
+            order =  getOrderManager().getOrder(getOrderAdapter().getElemByPosition(position));
             txtOrder.setText(order.getOrderMessage());
             orderId = order.getOrderId();
         } else {
@@ -143,47 +146,74 @@ public class OrderTab extends Fragment
             orderId = -1;
         }
 
-        btnClose.setOnClickListener(new View.OnClickListener()
-        {
+        btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
-                dialog.dismiss();
+                getDialog().dismiss();
             }
         });
 
-        btnAccept.setOnClickListener(new View.OnClickListener()
-        {
+        btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
-                editOrder(order, txtOrder, orderId, position);
-                initRecyclerView(rotationView);
-                dialog.dismiss();
+                if (!getIsTouchingButton()) {
+                    setIsTouchingButton(true);
+                    editOrder(order, txtOrder, orderId, position);
+                    initRecyclerView();
+                }
             }
         });
 
-        dialog.show();
+        getDialog().show();
     }
 
     public void editOrder(Order order, EditText txtOrder, int orderId, int position)
     {
-        orderName = txtOrder.getText().toString();
-        orderName = normalize(orderName);
-        order.setOrderMessage(orderName);
-
-        if (getOrderManager().checkOrderExist(orderName, orderId)) {
-            Toast.makeText(getContext(), "Cet ordre existe déjà .", Toast.LENGTH_LONG).show();
+        if (txtOrder.getText().toString().trim().equals("")) {
+            finalEditAction("Veuillez saisir l'ordre .", false);
             return;
         }
+
+        setOrderName(normalize(txtOrder.getText().toString()));
+        order.setOrderMessage(getOrderName());
+
+        if (getOrderManager().checkOrderExist(getOrderName(), orderId)) {
+            finalEditAction("Cet ordre existe déjà .", false);
+            return;
+        }
+
+        String message = "";
 
         if (-1 == position) {
             // Création d'un nouvel ordre
             getOrderManager().create(order);
+            message = "Ordre créé.";
         } else {
             // Edition d'un ordre
             getOrderManager().update(order);
+            message = "Ordre modifié.";
         }
+
+        finalEditAction(message, true);
+    }
+
+    public void finalEditAction(final String str, final boolean close)
+    {
+        Toast.makeText(getContext(), str, Toast.LENGTH_SHORT).show();
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setIsTouchingButton(false);
+
+                if (close) {
+                    getDialog().dismiss();
+                }
+            }
+        }, 3000);
     }
 
     public String normalize(String str)

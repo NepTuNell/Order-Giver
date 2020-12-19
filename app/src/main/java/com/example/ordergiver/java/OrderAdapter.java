@@ -6,13 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ordergiver.R;
-import com.example.ordergiver.entity.ExampleItem;
 import com.example.ordergiver.entity.Order;
 
 import java.util.ArrayList;
@@ -45,7 +43,6 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ExampleViewH
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        // Toast.makeText(v.getContext(), textView.toString(), Toast.LENGTH_SHORT).show();
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
                             listener.onEditClick(position);

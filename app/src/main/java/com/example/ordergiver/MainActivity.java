@@ -1,43 +1,42 @@
 package com.example.ordergiver;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.example.ordergiver.fragments.*;
+import com.example.ordergiver.java.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button speechRecognizerButton;
-    private TextView speechRecognizerText;
+    private ViewPager viewVisible;
+    private PagerAdapter pageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.initView();
     }
 
-    private void settersWithId()
+    // View configuration ----------------------
+    private void initView()
     {
-        this.speechRecognizerButton = findViewById(R.id.btn_mic);
-        this.speechRecognizerText = findViewById(R.id.txt_state);
+        // Add Tabs
+        List<Fragment> fragmentList = new ArrayList<>();
+        fragmentList.add(new HomeTab());
+        fragmentList.add(new OrderTab());
+
+        // Config
+        this.viewVisible = findViewById(R.id.view_visible);
+        this.pageAdapter = new Adapter(getSupportFragmentManager(), fragmentList);
+        this.viewVisible.setAdapter(this.pageAdapter);
     }
 
-    public void setSpeechRecognizerButton(Button speechRecognizerButton) {
-        this.speechRecognizerButton = speechRecognizerButton;
-    }
-
-    public Button getSpeechRecognizerButton() {
-        return this.speechRecognizerButton;
-    }
-
-    public void setSpeechRecognizerText(TextView speechRecognizerText) {
-        this.speechRecognizerText = speechRecognizerText;
-    }
-
-    public TextView getSpeechRecognizerText() {
-        return this.speechRecognizerText;
-    }
 }

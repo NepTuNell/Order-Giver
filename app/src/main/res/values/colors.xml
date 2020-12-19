@@ -5,7 +5,7 @@
     <color name="colorAccent">#03DAC5</color>
 
     // Couleurs du fond de l'app
-    <color name="topBackground">#00B6FF</color>
+    <color name="topBackground">#64D2FF</color>
     <color name="bottomBackground">#076DFF</color>
 
     // Couleurs de polices

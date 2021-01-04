@@ -6,32 +6,35 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.List;
 
-/*
-    Adapter Module for control tabs
-    @nait-sab
-*/
 
 public class Adapter extends FragmentPagerAdapter
 {
-    // Composants
-    private List<Fragment> _tabList;
+    //****************************
+    // Attributes
+    //****************************
 
-    // Constructeur
+    private List<Fragment> mTabList;
+
+    // Constructor
     public Adapter(FragmentManager manager, List<Fragment> tabList)
     {
         super(manager);
-        _tabList = tabList;
+        mTabList = tabList;
     }
+
+    //****************************
+    // Methods
+    //****************************
 
     @Override
     public Fragment getItem(int position)
     {
-        return _tabList.get(position);
+        return mTabList.get(position);
     }
 
     @Override
     public int getCount()
     {
-        return _tabList.size();
+        return mTabList.size();
     }
 }

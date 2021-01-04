@@ -13,13 +13,17 @@ import com.example.ordergiver.java.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-
-    private ViewPager viewVisible;
-    private PagerAdapter pageAdapter;
+public class MainActivity extends AppCompatActivity
+{
+    //****************************
+    // Attributes
+    //****************************
+    private ViewPager mViewVisible;
+    private PagerAdapter mPageAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.initView();
@@ -34,9 +38,9 @@ public class MainActivity extends AppCompatActivity {
         fragmentList.add(new OrderTab());
 
         // Config
-        this.viewVisible = findViewById(R.id.view_visible);
-        this.pageAdapter = new Adapter(getSupportFragmentManager(), fragmentList);
-        this.viewVisible.setAdapter(this.pageAdapter);
+        mViewVisible = findViewById(R.id.view_visible);
+        mPageAdapter = new Adapter(getSupportFragmentManager(), fragmentList);
+        mViewVisible.setAdapter(mPageAdapter);
     }
 
 }

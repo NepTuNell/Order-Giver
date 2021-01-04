@@ -12,11 +12,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:text="Order Giver"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:text="@string/home_tab_title"
         android:gravity="center"
-        android:textSize="40dp"
+        android:textSize="40sp"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:layout_marginTop="20dp" />
@@ -27,10 +27,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Touchez pour donner un ordre"
+        android:text="@string/home_tab_text_information"
         android:gravity="center"
         android:textColor="@color/white"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <Button
@@ -55,8 +55,8 @@
             android:id="@+id/txt_voice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="En attente..."
-            android:textSize="15dp"
+            android:text="@string/home_tab_is_waiting_placeholder"
+            android:textSize="15sp"
             android:textColor="@color/white" />
 
     </ScrollView>

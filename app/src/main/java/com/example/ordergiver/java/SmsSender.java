@@ -3,10 +3,15 @@ package com.example.ordergiver.java;
 import android.telephony.SmsManager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.jetbrains.annotations.NotNull;
 
-public class SmsSender extends AppCompatActivity {
 
-    public boolean sendSms(String message, String num)
+public class SmsSender extends AppCompatActivity
+{
+    /**
+     * Send sms
+     */
+    public boolean sendSms(@NotNull String message, @NotNull String num)
     {
         if (message.trim().equals("") || num.trim().equals("")) {
             return false;

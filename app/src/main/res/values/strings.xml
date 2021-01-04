@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">Order Giver</string>
+
+    // Button
+    <string name="button_accept">Confirmer</string>
+    <string name="button_cancel">Annuler</string>
+    <string name="button_trash_description">Trash image</string>
+    <string name="button_edit_description">Edit image</string>
+
+    // Sms popup
+    <string name="recognized_order">Ordre reconnu</string>
+    <string name="send_text_default">Indiquer un numéro de téléphone pour envoyer l\'ordre</string>
+    <string name="edit_num_placeholder">0x xx xx xx xx</string>
+
+    // Order manage
+    <string name="manage_order_title">Gestion des ordres</string>
+
+    // Listener
+    <string name="home_tab_title">Order Giver</string>
+    <string name="home_tab_text_information">Touchez pour donner un ordre</string>
+    <string name="home_tab_is_waiting_placeholder">En attente...</string>
+    <string name="synchronize">Installer les données</string>
+    <string name="install_progress">Installation en cours ...</string>
 </resources>

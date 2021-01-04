@@ -9,58 +9,81 @@ import android.provider.BaseColumns;
 import com.example.ordergiver.entity.Order;
 import com.example.ordergiver.database.DatabaseSQLLite;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
-public class OrderManager {
+public class OrderManager
+{
 
-    private DatabaseSQLLite db;
-    private SQLiteDatabase manager;
+    //****************************
+    // Attributes
+    //****************************
+    private DatabaseSQLLite mDB;
+    private SQLiteDatabase mManager;
 
-    /*****************************************
-     *         Création de l'instance
-     *****************************************/
-
-    /* Inner class that defines the table contents */
-    public static class FeedOrder implements BaseColumns {
+    /**
+     *  Inner class that defines the table contents
+     */
+    public static class FeedOrder implements BaseColumns
+    {
         public static final String TABLE_NAME = "t_order";
         public static final String KEY_ID_ORDER = "id_order";
         public static final String KEY_NOM_ORDER = "order_message";
     }
 
-    // Constructeur
+    // Constructor
     public OrderManager(Context context) {
-        this.db = DatabaseSQLLite.getInstance(context);
+        mDB = DatabaseSQLLite.getInstance(context);
     }
 
-    /*****************************************
-     *     Gestion de la base de données
-     *****************************************/
 
+    //****************************
+    // Methods which manage DB
+    //****************************
+
+
+    /**
+     * Return the manager
+     */
     public SQLiteDatabase getManager()
     {
-        return this.manager;
+        return mManager;
     }
 
+    /**
+     * Open database in write mod
+     */
     public void openWriteMod()
     {
-        this.manager = this.db.getWritableDatabase();
+        mManager = mDB.getWritableDatabase();
     }
 
+    /**
+     * Open database in read mod
+     */
     public void openReadMod()
     {
-        this.manager = this.db.getReadableDatabase();
+        mManager = mDB.getReadableDatabase();
     }
 
+    /**
+     * Close the database
+     */
     public void close()
     {
-        this.manager.close();
+        mManager.close();
     }
 
-    /*****************************************
-     *           Méthodes du CRUD
-     *****************************************/
+    //****************************
+    // Methods of CRUD and others
+    //****************************
 
-    public void create(Order order) {
+    /**
+     * Create new order
+     */
+    public void create(@NotNull Order order)
+    {
         openWriteMod();
 
         ContentValues values = new ContentValues();
@@ -70,7 +93,11 @@ public class OrderManager {
         close();
     }
 
-    public void update(Order order) {
+    /**
+     * Update order
+     */
+    public void update(@NotNull Order order)
+    {
         openWriteMod();
 
         ContentValues values = new ContentValues();
@@ -82,7 +109,11 @@ public class OrderManager {
         close();
     }
 
-    public void delete(Order order) {
+    /**
+     * Delete order
+     */
+    public void delete(@NotNull Order order)
+    {
         openWriteMod();
 
         String where = FeedOrder.KEY_ID_ORDER+" = ?";
@@ -92,11 +123,15 @@ public class OrderManager {
         close();
     }
 
-    public Order getOrder(int id) {
+    /**
+     * Fetch an order
+     */
+    public Order getOrder(int id)
+    {
         openReadMod();
-        Order order=new Order(0,"");
+        Order order = new Order(0,"");
 
-        Cursor c = manager.rawQuery("SELECT * FROM "+FeedOrder.TABLE_NAME+" WHERE "+FeedOrder.KEY_ID_ORDER+"="+id, null);
+        Cursor c = getManager().rawQuery("SELECT * FROM "+FeedOrder.TABLE_NAME+" WHERE "+FeedOrder.KEY_ID_ORDER+"="+id, null);
         if (c.moveToFirst()) {
             order.setOrderId(c.getInt(c.getColumnIndex(FeedOrder.KEY_ID_ORDER)));
             order.setOrderMessage(c.getString(c.getColumnIndex(FeedOrder.KEY_NOM_ORDER)));
@@ -108,10 +143,14 @@ public class OrderManager {
         return order;
     }
 
-    public ArrayList<Order> getOrders() {
+    /**
+     * Fetch all orders
+     */
+    public ArrayList<Order> getOrders()
+    {
         openReadMod();
         ArrayList<Order> ordersItems = new ArrayList<Order>();
-        Cursor cursor = manager.rawQuery("SELECT * FROM " + FeedOrder.TABLE_NAME, null);
+        Cursor cursor = getManager().rawQuery("SELECT * FROM " + FeedOrder.TABLE_NAME, null);
 
         while (cursor.moveToNext()) {
             Order order = new Order();
@@ -126,6 +165,9 @@ public class OrderManager {
         return ordersItems;
     }
 
+    /**
+     * Check if the order already exists
+     */
     public boolean checkOrderExist(String orderName, int orderId) {
         openReadMod();
 
@@ -136,7 +178,7 @@ public class OrderManager {
             query += " AND "+FeedOrder.KEY_ID_ORDER+" <> "+orderId;
         }
 
-        Cursor cursor = manager.rawQuery(query, null);
+        Cursor cursor = getManager().rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             exist = true;

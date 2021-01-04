@@ -5,40 +5,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="4dp"
     android:layout_marginVertical="5dp"
-    android:layout_marginHorizontal="4dp">
+    android:layout_marginHorizontal="10dp">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="4dp">
+        android:layout_height="50dp"
+        android:background="@color/order_item_background"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        android:padding="5dp"
+        android:baselineAligned="false">
 
-        <TextView
-            android:id="@+id/texViewListOrder"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="0.6"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/texViewListOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="0.4"
             android:layout_height="wrap_content"
-            android:text="Line 1"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_alignParentTop="true" />
+            android:gravity="end">
+            <ImageView
+                android:id="@+id/image_delete"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_delete"
+                android:contentDescription="@string/button_trash_description" />
 
-        <ImageView
-            android:id="@+id/image_delete"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_delete"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"/>
+            <ImageView
+                android:id="@+id/image_edit"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_edit"
+                android:contentDescription="@string/button_edit_description"/>
+        </LinearLayout>
 
-        <ImageView
-            android:id="@+id/image_edit"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="56dp"
-            android:src="@drawable/ic_edit" />
-
-    </RelativeLayout>
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

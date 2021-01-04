@@ -11,8 +11,8 @@
         android:id="@+id/sms_popup_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ordre reconnu"
-        android:textSize="30dp"
+        android:text="@string/recognized_order"
+        android:textSize="30sp"
         android:textColor="@color/white"
         android:textStyle="bold" />
 
@@ -21,8 +21,8 @@
         android:layout_below="@id/sms_popup_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Indiquer un numéro de téléphone pour envoyer l'ordre"
-        android:textSize="16dp"
+        android:text="@string/send_text_default"
+        android:textSize="16sp"
         android:textColor="@color/white"
         android:layout_marginTop="5dp" />
 
@@ -32,35 +32,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:hint="0x xx xx xx xx"
-        android:textSize="16dp" />
+        android:hint="@string/edit_num_placeholder"
+        android:textSize="16sp"
+        android:autofillHints=""
+        android:inputType="numberSigned" />
 
     <LinearLayout
         android:layout_below="@id/sms_popup_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:weightSum="2"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/sms_popup_cancel"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="5dp"
-            android:text="Annuler"
+            android:text="@string/button_cancel"
             android:textAllCaps="false"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:background="@drawable/popup_background" />
 
         <Button
             android:id="@+id/sms_popup_valid"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="5dp"
-            android:text="Confirmer"
+            android:text="@string/button_accept"
             android:textAllCaps="false"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:background="@drawable/popup_background" />
 
     </LinearLayout>

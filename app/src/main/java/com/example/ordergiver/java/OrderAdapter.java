@@ -15,33 +15,122 @@ import com.example.ordergiver.entity.Order;
 
 import java.util.ArrayList;
 
-public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ExampleViewHolder> {
-    private ArrayList<Order> ordersList;
+public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ExampleViewHolder>
+{
+    //****************************
+    // Attributes
+    //****************************
+
+    private ArrayList<Order> mOrdersList;
     private OnItemClickListener mListener;
 
-    public interface OnItemClickListener {
+    //****************************
+    // Getters
+    //****************************
+
+    public ArrayList<Order> getOrdersList() { return mOrdersList; }
+    public OnItemClickListener getListener() { return mListener; }
+
+    // Constructor
+    public OrderAdapter(ArrayList<Order> ordersList)
+    {
+        mOrdersList = ordersList;
+    }
+
+    // Interface
+    public interface OnItemClickListener
+    {
         void onEditClick(int position);
         void onDeleteClick(int position);
     }
+
+    //****************************
+    // Methods
+    //****************************
 
     public void setOnItemClickListener (OnItemClickListener listener) {
         mListener = listener;
     }
 
-    public static class ExampleViewHolder extends RecyclerView.ViewHolder {
-        public TextView textView;
-        public ImageView deleteImage;
-        public ImageView editImage;
+    @NonNull
+    @Override
+    public ExampleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+        ExampleViewHolder evh = new ExampleViewHolder(v, getListener());
+        return evh;
+    }
 
-        public ExampleViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
+    @Override
+    public void onBindViewHolder(@NonNull ExampleViewHolder holder, int position)
+    {
+        Order currentItem = mOrdersList.get(position);
+        holder.getTextView().setText(currentItem.getOrderMessage());
+    }
+
+    @Override
+    public int getItemCount()
+    {
+        return getOrdersList().size();
+    }
+
+    /**
+     * Return an order at a position
+     */
+    public int getElemByPosition(int position)
+    {
+        return getOrdersList().get(position).getOrderId();
+    }
+
+    /**
+     * Inner class
+     */
+    public static class ExampleViewHolder extends RecyclerView.ViewHolder
+    {
+        //****************************
+        // Attributes
+        //****************************
+
+        public TextView mTextView;
+        public ImageView mDeleteImage;
+        public ImageView mEditImage;
+
+        //****************************
+        // Getters
+        //****************************
+
+        public TextView getTextView()
+        {
+            return mTextView;
+        }
+
+        public ImageView getEditImage()
+        {
+            return mEditImage;
+
+        }
+        public ImageView getDeleteImage()
+        {
+            return mDeleteImage;
+        }
+
+        // Constructor
+        public ExampleViewHolder(@NonNull View itemView, final OnItemClickListener listener)
+        {
             super(itemView);
-            textView = itemView.findViewById(R.id.texViewListOrder);
-            editImage = itemView.findViewById(R.id.image_edit);
-            deleteImage = itemView.findViewById(R.id.image_delete);
+            mTextView = itemView.findViewById(R.id.texViewListOrder);
+            mEditImage = itemView.findViewById(R.id.image_edit);
+            mDeleteImage = itemView.findViewById(R.id.image_delete);
+            addEventListeners(listener);
+        }
 
-            editImage.setOnClickListener(new View.OnClickListener() {
+        // Listeners
+        private void addEventListeners(final OnItemClickListener listener)
+        {
+            getEditImage().setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v)
+                {
                     if (listener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
@@ -51,7 +140,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ExampleViewH
                 }
             });
 
-            deleteImage.setOnClickListener(new View.OnClickListener() {
+            getDeleteImage().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
@@ -65,30 +154,4 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ExampleViewH
         }
     }
 
-    public OrderAdapter(ArrayList<Order> ordersList) {
-        this.ordersList = ordersList;
-    }
-
-    @NonNull
-    @Override
-    public ExampleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-        ExampleViewHolder evh = new ExampleViewHolder(v, mListener);
-        return evh;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ExampleViewHolder holder, int position) {
-        Order currentItem = this.ordersList.get(position);
-        holder.textView.setText(currentItem.getOrderMessage());
-    }
-
-    @Override
-    public int getItemCount() {
-        return this.ordersList.size();
-    }
-
-    public int getElemByPosition(int position) {
-        return this.ordersList.get(position).getOrderId();
-    }
 }

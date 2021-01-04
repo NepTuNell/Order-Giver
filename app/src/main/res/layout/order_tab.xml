@@ -5,35 +5,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/app_background"
-    tools:context=".fragments.HomeTab">
+    tools:context=".fragments.HomeTab"
+    android:id="@+id/relative_layout_order">
 
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
         android:id="@+id/txt_titre"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:text="Gestion des ordres"
-        android:gravity="center_vertical"
-        android:textColor="@color/white"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:textSize="25dp"
-        android:textStyle="bold" />
+        android:baselineAligned="false">
 
-    <Button
-        android:id="@+id/btn_add"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/ic_add" />
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:text="@string/manage_order_title"
+                android:gravity="center_vertical"
+                android:layout_gravity="start"
+                android:textColor="@color/white"
+                android:layout_marginStart="20dp"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/ic_add" />
+        </RelativeLayout>
+
+    </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txt_titre"
         android:layout_alignParentBottom="true"
-        >
+        android:fillViewport="true">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -46,6 +65,41 @@
                 android:scrollbars="vertical"
                 android:layout_marginBottom="100dp"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/synchronize"
+                    android:gravity="center"
+                    android:id="@+id/btn_sync">
+
+                </Button>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="invisible"
+                android:id="@+id/linear_is_sync"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="250dp"
+                    android:layout_height="150dp"
+                    android:gravity="center"
+                    android:background="@color/white"
+                    android:textSize="25sp"
+                    android:text="@string/install_progress"
+                    android:id="@+id/install_progress_text">
+
+                </TextView>
+            </LinearLayout>
         </RelativeLayout>
     </ScrollView>
 

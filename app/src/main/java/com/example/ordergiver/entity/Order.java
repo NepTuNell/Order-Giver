@@ -1,35 +1,31 @@
 package com.example.ordergiver.entity;
 
-public class Order {
+public class Order
+{
+    //****************************
+    // Attributes
+    //****************************
 
-    private int orderId;
-    private String orderMessage;
+    private int mOrderId;
+    private String mOrderMessage;
 
+    // Constructor
     public Order(int orderId, String orderMessage) {
-        this.orderId = orderId;
-        this.orderMessage = orderMessage;
+        mOrderId = orderId;
+        mOrderMessage = orderMessage;
     }
 
-    public Order() {
+    public Order() {}
 
-    }
+    //****************************
+    // Accessors
+    //****************************
 
-    public int getOrderId() {
-        return this.orderId;
-    }
+    // Getters
+    public int getOrderId() { return mOrderId; }
+    public String getOrderMessage() { return mOrderMessage; }
 
-    public void setOrderId(int orderId)
-    {
-        this.orderId = orderId;
-    }
-
-    public String getOrderMessage()
-    {
-        return this.orderMessage;
-    }
-
-    public void setOrderMessage(String orderMessage)
-    {
-        this.orderMessage = orderMessage;
-    }
+    // Setters
+    public void setOrderId(int orderId) { mOrderId = orderId; }
+    public void setOrderMessage(String orderMessage) { mOrderMessage = orderMessage; }
 }

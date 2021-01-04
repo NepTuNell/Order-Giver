@@ -8,6 +8,9 @@
     <color name="topBackground">#64D2FF</color>
     <color name="bottomBackground">#076DFF</color>
 
+    // Couleur item (ordre)
+    <color name="order_item_background">#3E076DFF</color>
+
     // Couleurs de polices
     <color name="white">#FFFFFF</color>
 </resources>

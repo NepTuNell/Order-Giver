@@ -77,9 +77,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ExampleViewH
     /**
      * Return an order at a position
      */
-    public int getElemByPosition(int position)
+    public Order getElemByPosition(int position)
     {
-        return getOrdersList().get(position).getOrderId();
+        return getOrdersList().get(position);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.example.ordergiver.manager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
@@ -116,8 +117,8 @@ public class OrderManager
     {
         openWriteMod();
 
-        String where = FeedOrder.KEY_ID_ORDER+" = ?";
-        String[] whereArgs = {""+order.getOrderId()};
+        String where = FeedOrder.KEY_NOM_ORDER+" = ?";
+        String[] whereArgs = {""+ order.getOrderMessage()};
         getManager().delete(FeedOrder.TABLE_NAME, where, whereArgs);
 
         close();
@@ -126,12 +127,12 @@ public class OrderManager
     /**
      * Fetch an order
      */
-    public Order getOrder(int id)
+    public Order getOrder(String orderMessage)
     {
         openReadMod();
         Order order = new Order(0,"");
 
-        Cursor c = getManager().rawQuery("SELECT * FROM "+FeedOrder.TABLE_NAME+" WHERE "+FeedOrder.KEY_ID_ORDER+"="+id, null);
+        Cursor c = getManager().rawQuery("SELECT * FROM "+FeedOrder.TABLE_NAME+" WHERE "+FeedOrder.KEY_NOM_ORDER+"="+DatabaseUtils.sqlEscapeString(orderMessage), null);
         if (c.moveToFirst()) {
             order.setOrderId(c.getInt(c.getColumnIndex(FeedOrder.KEY_ID_ORDER)));
             order.setOrderMessage(c.getString(c.getColumnIndex(FeedOrder.KEY_NOM_ORDER)));
@@ -172,7 +173,7 @@ public class OrderManager
         openReadMod();
 
         boolean exist = false;
-        String query = "SELECT * FROM "+FeedOrder.TABLE_NAME+" WHERE "+FeedOrder.KEY_NOM_ORDER+" = '"+orderName+"'";
+        String query = "SELECT * FROM "+FeedOrder.TABLE_NAME+" WHERE "+FeedOrder.KEY_NOM_ORDER+" = "+DatabaseUtils.sqlEscapeString(orderName);
 
         if (-1 != orderId) {
             query += " AND "+FeedOrder.KEY_ID_ORDER+" <> "+orderId;

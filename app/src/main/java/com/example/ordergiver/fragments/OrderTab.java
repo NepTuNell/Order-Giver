@@ -283,7 +283,7 @@ public class OrderTab extends Fragment
      */
     public void removeItemRecycler (int position)
     {
-        Order order = getOrderManager().getOrder(getOrderAdapter().getElemByPosition(position));
+        Order order = getOrderAdapter().getElemByPosition(position);
         getOrderManager().delete(order);
         getOrdersList().remove(position);
         getOrderAdapter().notifyItemRemoved(position);
@@ -297,7 +297,6 @@ public class OrderTab extends Fragment
         Button btnClose, btnAccept;
         final EditText txtOrder;
         final Order order;
-        final int orderId;
 
         getDialog().setContentView(R.layout.add_order_popup);
         btnClose = getDialog().findViewById(R.id.btn_close);
@@ -306,12 +305,10 @@ public class OrderTab extends Fragment
 
         // Get clicked item
         if (-1 != position) {
-            order = getOrderManager().getOrder(getOrderAdapter().getElemByPosition(position));
+            order = getOrderAdapter().getElemByPosition(position);
             txtOrder.setText(order.getOrderMessage());
-            orderId = order.getOrderId();
         } else {
             order = new Order();
-            orderId = -1;
         }
 
         // Dismiss dialog popup
@@ -330,7 +327,7 @@ public class OrderTab extends Fragment
             {
                 if (!getIsTouchingButton()) {
                     setIsTouchingButton(true);
-                    editOrder(order, txtOrder, orderId, position);
+                    editOrder(order, txtOrder, position);
                 }
             }
         });
@@ -341,7 +338,7 @@ public class OrderTab extends Fragment
     /**
      * Create or update an order
      */
-    private void editOrder(Order order, @NotNull EditText txtOrder, int orderId, int position)
+    private void editOrder(Order order, @NotNull EditText txtOrder, int position)
     {
         if (txtOrder.getText().toString().trim().equals("")) {
             printMessage("Veuillez saisir l'ordre .", false);
@@ -359,7 +356,7 @@ public class OrderTab extends Fragment
         }
 
         // Check if verb already exists in order's table
-        if (getOrderManager().checkOrderExist(getOrderName(), orderId)) {
+        if (getOrderManager().checkOrderExist(getOrderName(), order.getOrderId())) {
             printMessage("Cet ordre existe déjà.", false);
             return;
         }
@@ -367,7 +364,7 @@ public class OrderTab extends Fragment
         if (-1 == position) {
             // Create new order
             getOrderManager().create(order);
-            addItemRecycler(order);
+            addItemRecycler(getOrderManager().getOrder(order.getOrderMessage()));
             message = "Ordre créé.";
         } else {
             // Update order
